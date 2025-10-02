@@ -24,16 +24,17 @@ def select_keep(dice_roll):
     """Returns the dice that will NOT be re-rolled according to the request of the user"""
     print(f"Dice roll: {dice_roll}")
     user_input = input("Select which dice you would like to keep(ex: 332, 641, [no spaces]): ")
-    for char in user_input:
-        if int(char) not in dice_roll: #input be composed strictly of digits that exist in the dice roll
-            print("Invalid input: digits only and no spaces")
-            return select_keep(dice_roll)
+
+    if not (user_input.isdigit() and all(int(char) in dice_roll for char in user_input)): #input must be composed strictly of digits and those digits must exist in the dice roll
+        print("Invalid input: digits only and no spaces, and said digits must exist in the dice roll")
+        return select_keep(dice_roll)
+        
     user_input = [int(char) for char in user_input]
 
     dice_roll_frequency = helper_freq_dict_for_list(dice_roll) #using helper function to turn dice roll list into a frequency table
     user_input_frequency = helper_freq_dict_for_list(user_input) #*** 
-    
-    for digit, frequency in user_input_frequency.items():
+        
+    for digit, frequency in user_input_frequency.items(): #if the frequency of the user input for a given number (1-6) is higher than the frequency of the dice roll it's an invalid input
         if frequency > dice_roll_frequency[digit]:
             print("Invalid input: select a valid choice")
             return select_keep(dice_roll)
