@@ -25,6 +25,9 @@ def select_keep(dice_roll):
     print(f"Dice roll: {dice_roll}")
     user_input = input("Select which dice you would like to keep(ex: 332, 641, [no spaces]): ")
 
+    if user_input == "": #if the user wants to reroll all the dice
+        return []
+    
     if not (user_input.isdigit() and all(int(char) in dice_roll for char in user_input)): #input must be composed strictly of digits and those digits must exist in the dice roll
         print("Invalid input: digits only and no spaces, and said digits must exist in the dice roll")
         return select_keep(dice_roll)
