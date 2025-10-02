@@ -37,9 +37,30 @@ def select_keep(dice_roll):
     for digit, frequency in user_input_frequency.items(): #if the frequency of the user input for a given number (1-6) is higher than the frequency of the dice roll it's an invalid input
         if frequency > dice_roll_frequency[digit]:
             print("Invalid input: select a valid choice")
-            return select_keep(dice_roll)
+            return select_keep(dice_roll)   
     return user_input  
+
+reroll = lambda dice, kept: roll_dice(len(dice) - len(kept)) + kept
+reroll.__doc__ = """Rerolls the dice that were not kept and returns the new dice roll(rerolled + kept)"""
+
+def has_straight(dice, length):
+    """Checks if there is a straight of k length in a given dice roll"""
+    ordered_dice = sorted(set(dice)) #we convert dice to a set and then an ordered list because 1) it is an ordered data structure, easier to find a sequence 2) duplicates are of no importance in straights
     
+    if len(dice)<length: #straights of k=length can only exist if the amount of non duplicate numbers is >= k
+        return False
+    
+    longest_seq=1
+
+    for i in range(1, len(ordered_dice)):
+        if ordered_dice[i] == ordered_dice[i-1] + 1:
+            longest_seq += 1
+            if longest_seq == length:
+                return True
+        else:
+            longest_seq = 1
+    return False
+
 if __name__ == "__main__":
     print(roll_dice.__doc__)
     print(roll_dice(5))
@@ -50,4 +71,9 @@ if __name__ == "__main__":
     print(select_keep.__doc__)
     x=roll_dice(5)
     selected = select_keep(x)
-    print(selected) 
+    print(selected)
+    print(reroll.__doc__)
+    y=reroll(x, selected)
+    print(y)
+    print(has_straight.__doc__)
+    print(has_straight([1,2,3,4],4))
