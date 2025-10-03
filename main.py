@@ -37,7 +37,6 @@ class GameState:
 
 
 if __name__ == "__main__":
-    game = GameState(1759516250)
-    print(game.__doc__)
+    game = GameState()
     print(f"\n   Random Seed for current game: {game.seed}\n")
     game.loop()
