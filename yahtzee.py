@@ -117,7 +117,7 @@ def evaluate(dice):
     return score_dictionary
 
 def choose(scores, used):
-    """Filters all possible scoring options by comparing the score possibilities of the round that have not been used previously"""
+    """Filters all possible scoring options by comparing the score possibilities of the round that have not been used previously and returns the chose option and respective score"""
 
     non_null_scores = {option: score for option, score in scores.items() if score != 0} #filter out all scoring options which equal zero
     valid_options = {option: score for option, score in non_null_scores.items() if option not in used} #filter out all previously used scoring options
@@ -142,10 +142,49 @@ def choose(scores, used):
 
     used.append(option)
 
-    scores[option] = score
-
-    #return option, score
     return option, score 
+
+def display_scorecard(card):
+    """Prints out the scoreboard"""
+    print("\n")
+    print("Scorecard :\n")
+
+    for option, score in card.items():
+        print(f"{option}: {score}")
+    
+
+    #upper score
+    upper_options = [str(i) for i in range(1,7)]
+    upper_sum = sum(card[option] for option in upper_options if card[option] is not None)
+    print(f"\nUpper Section Total: {upper_sum}")
+
+    #bonus
+    bonus = 0
+    if upper_sum >= 63:
+        bonus = 35
+    print(f"\nBonus: {bonus}")
+
+    #total score
+    total_score = sum(score for score in card.values() if score is not None) + bonus
+    print(f"\nTotal Score: {total_score}")  
+
+def play_round(card):
+    """Play a round of yahtzee with the previously defined functions"""
+    print("\n Round Start!\n")
+
+    dice = roll_dice(5) #Up to 3 dice throws
+    for i in range(2): 
+        print(f"\nDice: {dice}")
+        kept = select_keep(dice)
+        dice = reroll(dice, kept)
+    print(f"Dice result: {dice}")
+
+    return dice
+    scores =  evaluate(dice)
+
+    option, score = choose(scores, used)
+    card[option] = score
+    display_scorecard(card)
 
 if __name__ == "__main__":
     print(roll_dice.__doc__)
@@ -183,5 +222,14 @@ if __name__ == "__main__":
     x=[3, 3, 5, 5, 5]
     print(x)
     y = ["three_of_a_kind", "3", "chance"]
-    print(choose(evaluate(x), y))
+    z , zz = choose(evaluate(x), y)
+    print(z)
     print(y)
+    scorecard = create_empty_scorecard()
+    scorecard["1"] = 3
+    scorecard["2"] = 6
+    scorecard["three_of_a_kind"] = 17
+    scorecard["chance"] = 20
+    scorecard[z] = zz
+
+    display_scorecard(scorecard)
