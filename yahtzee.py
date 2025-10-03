@@ -71,7 +71,7 @@ def evaluate(dice):
     dice_roll_frequency = helper_freq_dict_for_list(dice) #frequency of all digits in the dice roll
 
     #sum all the digits individually in the dice_roll
-    for digit in range(1, len(dice)):
+    for digit in range(1, 7):
         if digit in dice_roll_frequency:
             score_dictionary[str(digit)] = dice_roll_frequency[digit] * digit
         else:
@@ -128,7 +128,9 @@ if __name__ == "__main__":
     print(create_empty_scorecard.__doc__)
     print(create_empty_scorecard())
     print(helper_freq_dict_for_list.__doc__)
-    print(helper_freq_dict_for_list([5, 5, 5, 2, 1, 2, 9, 8, 1, 1, 0, 6, 9]))
+    x=[5, 5, 5, 2, 1, 2, 9, 8, 1, 1, 0, 6, 9]
+    print(x)
+    print(helper_freq_dict_for_list(x))
     print(select_keep.__doc__)
     x=roll_dice(5)
     selected = select_keep(x)
