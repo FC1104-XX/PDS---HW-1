@@ -121,11 +121,18 @@ def choose(scores, used):
     non_null_scores = {option: score for option, score in scores.items() if score != 0} #filter out all scoring options which equal zero
     valid_options = {option: score for option, score in non_null_scores.items() if option not in used} #filter out all previously used scoring options
 
+    #Extra logic for if there are no scoring options left, must pick one and fill it with a 0
+    if not valid_options:
+        print(f"\nNo valid scoring options. Pick one to 0 out:")
+        valid_options = {option: 0 for option, score in scores.items() if option not in used}
+    else:
+        print("\nAll Scoring options:")
+
     #in order to make the process easier through indexing we convert the dictionary of valid options into a typecasted list of items
     valid_options_indexed = list(valid_options.items())
-    print("\nAll Scoring options:")
+    
     for i, option_score in enumerate(valid_options_indexed):
-        print(f"{i+1}): {option_score[0]}: {option_score[1]}\n")
+        print(f"{i+1})  [{option_score[0]}: {option_score[1]} points]\n")
 
     user_input = input("Type in your scoring option NUMBER(ex. 2, 3, 7): ")
     if not user_input.isdigit():
@@ -136,9 +143,7 @@ def choose(scores, used):
         print("Enter a VALID scoring option.")
         return choose(scores, used)
 
-    #MAL: NÃO SEI BEM O QUE DEVIA DEVOLVER
     option, score = valid_options_indexed[int(user_input)-1]
-
     used.append(option)
 
     return option, score 
@@ -150,23 +155,23 @@ def display_scorecard(card):
     print("--------------------------\n")
 
     for option, score in card.items():
-        print(f"{option}: {score}")
+        print(f"{option}: {score} points")
     
 
     #upper score
     upper_options = [str(i) for i in range(1,7)]
     upper_sum = sum(card[option] for option in upper_options if card[option] is not None)
-    print(f"\nUpper Section Total: {upper_sum}")
+    print(f"\nUpper Section Total: {upper_sum} points")
 
     #bonus
     bonus = 0
     if upper_sum >= 63:
         bonus = 35
-    print(f"\nBonus: {bonus}")
+    print(f"\nBonus: {bonus} points")
 
     #total score
     total_score = sum(score for score in card.values() if score is not None) + bonus
-    print(f"\nTotal Score: {total_score}")  
+    print(f"\nTotal Score: {total_score}  points")  
 
 def play_round(card):
     """Play a round of yahtzee with the previously defined functions"""
@@ -180,50 +185,3 @@ def play_round(card):
 
     return dice
 
-if __name__ == "__main__":
-    print(roll_dice.__doc__)
-    print(roll_dice(5))
-    print(create_empty_scorecard.__doc__)
-    print(create_empty_scorecard())
-    print(helper_freq_dict_for_list.__doc__)
-    x=[5, 5, 5, 2, 1, 2, 9, 8, 1, 1, 0, 6, 9]
-    print(x)
-    print(helper_freq_dict_for_list(x))
-    print(select_keep.__doc__)
-    x=roll_dice(5)
-    selected = select_keep(x)
-    print(selected)
-    print(reroll.__doc__)
-    y=reroll(x, selected)
-    print(y)
-    print(has_straight.__doc__)
-    print(has_straight([1,2,3,4],4))
-    x=[2, 3, 3, 5, 6]
-    print(x)
-    print(evaluate(x))
-    x=[1, 1, 1, 1, 1]
-    print(x)
-    print(evaluate(x))
-    x=[2, 3, 3, 5, 6]
-    print(x)
-    print(evaluate(x))
-    x=[2, 2, 2, 2, 5]
-    print(x)
-    print(evaluate(x))
-    x=[2, 5, 5, 6, 6]
-    print(x)
-    print(evaluate(x))
-    x=[3, 3, 5, 5, 5]
-    print(x)
-    y = ["three_of_a_kind", "3", "chance"]
-    z , zz = choose(evaluate(x), y)
-    print(z)
-    print(y)
-    scorecard = create_empty_scorecard()
-    scorecard["1"] = 3
-    scorecard["2"] = 6
-    scorecard["three_of_a_kind"] = 17
-    scorecard["chance"] = 20
-    scorecard[z] = zz
-
-    display_scorecard(scorecard)
