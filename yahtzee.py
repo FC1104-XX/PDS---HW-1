@@ -22,7 +22,6 @@ def helper_freq_dict_for_list(dice_roll):
 
 def select_keep(dice_roll):
     """Returns the dice that will NOT be re-rolled according to the request of the user"""
-    print(f"Dice roll: {dice_roll}")
     user_input = input("Select which dice you would like to keep(ex: 332, 641, [no spaces]): ")
 
     if user_input == "": #if the user wants to reroll all the dice
@@ -124,17 +123,17 @@ def choose(scores, used):
 
     #in order to make the process easier through indexing we convert the dictionary of valid options into a typecasted list of items
     valid_options_indexed = list(valid_options.items())
-    print("\n")
+    print("\nAll Scoring options:")
     for i, option_score in enumerate(valid_options_indexed):
         print(f"{i+1}): {option_score[0]}: {option_score[1]}\n")
 
     user_input = input("Type in your scoring option NUMBER(ex. 2, 3, 7): ")
     if not user_input.isdigit():
-        print("Enter a valid scoring option.")
+        print("Enter a VALID scoring option.")
         return choose(scores, used)
     
     if int(user_input) not in range(1, len(valid_options_indexed)+1):
-        print("Enter a valid scoring option.")
+        print("Enter a VALID scoring option.")
         return choose(scores, used)
 
     #MAL: NÃO SEI BEM O QUE DEVIA DEVOLVER
@@ -147,7 +146,8 @@ def choose(scores, used):
 def display_scorecard(card):
     """Prints out the scoreboard"""
     print("\n")
-    print("Scorecard :\n")
+    print("Scorecard :")
+    print("--------------------------\n")
 
     for option, score in card.items():
         print(f"{option}: {score}")
@@ -170,21 +170,15 @@ def display_scorecard(card):
 
 def play_round(card):
     """Play a round of yahtzee with the previously defined functions"""
-    print("\n Round Start!\n")
+    print("\nRound Start!\n")
 
     dice = roll_dice(5) #Up to 3 dice throws
     for i in range(2): 
         print(f"\nDice: {dice}")
         kept = select_keep(dice)
         dice = reroll(dice, kept)
-    print(f"Dice result: {dice}")
 
     return dice
-    scores =  evaluate(dice)
-
-    option, score = choose(scores, used)
-    card[option] = score
-    display_scorecard(card)
 
 if __name__ == "__main__":
     print(roll_dice.__doc__)
