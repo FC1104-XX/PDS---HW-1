@@ -121,7 +121,7 @@ def choose(scores, used):
     non_null_scores = {option: score for option, score in scores.items() if score != 0} #filter out all scoring options which equal zero
     valid_options = {option: score for option, score in non_null_scores.items() if option not in used} #filter out all previously used scoring options
 
-    #Extra logic for if there are no scoring options left, must pick one and fill it with a 0
+    #Extra logic for if there are no scoring options left, user must pick one and fill it with a 0
     if not valid_options:
         print(f"\nNo valid scoring options. Pick one to 0 out:")
         valid_options = {option: 0 for option, score in scores.items() if option not in used}
@@ -154,6 +154,7 @@ def display_scorecard(card):
     print("Scorecard :")
     print("--------------------------\n")
 
+    #scores
     for option, score in card.items():
         print(f"{option}: {score} points")
     
@@ -177,7 +178,8 @@ def play_round(card):
     """Play a round of yahtzee with the previously defined functions"""
     print("\nRound Start!\n")
 
-    dice = roll_dice(5) #Up to 3 dice throws
+    dice = roll_dice(5)
+    #Up to 3 dice throws
     for i in range(2): 
         print(f"\nDice: {dice}")
         kept = select_keep(dice)
