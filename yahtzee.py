@@ -78,17 +78,15 @@ def evaluate(dice):
             score_dictionary[str(digit)] = 0
 
     #three of a kind, four of a kind 
-    #ACHO QUE ISTO TÁ MAL
-    for digit in dice_roll_frequency:
-        if dice_roll_frequency[digit] >= 3:
-            score_dictionary["three_of_a_kind"] = sum(dice)
-        else:
-            score_dictionary["three_of_a_kind"] = 0
+    if any(freq >= 3 for freq in dice_roll_frequency.values()):
+        score_dictionary["three_of_a_kind"] = sum(dice)
+    else:
+        score_dictionary["three_of_a_kind"] = 0
 
-        if dice_roll_frequency[digit] >= 4:
-            score_dictionary["four_of_a_kind"] = sum(dice)
-        else:
-            score_dictionary["four_of_a_kind"] = 0
+    if any(freq >= 4 for freq in dice_roll_frequency.values()):
+        score_dictionary["four_of_a_kind"] = sum(dice)
+    else:
+        score_dictionary["four_of_a_kind"] = 0
 
     #full house
     if len(dice_roll_frequency.keys()) == 2 and sorted(dice_roll_frequency.values()) == [2, 3]: #if we sort them we dont have to iterate over them 2 times 
@@ -118,9 +116,32 @@ def evaluate(dice):
 
     return score_dictionary
 
+def choose(scores, used):
+    """Filters all possible scoring options by comparing the score possibilities of the round that have not been used previously"""
 
+    non_null_scores = {option: score for option, score in scores.items() if score != 0} #filter out all scoring options which equal zero
+    valid_options = {option: score for option, score in non_null_scores.items() if option not in used} #filter out all previously used scoring options
 
+    #in order to make the process easier through indexing we convert the dictionary of valid options into a typecasted list of items
+    valid_options_indexed = list(valid_options.items())
+    print("\n")
+    for i, option_score in enumerate(valid_options_indexed):
+        print(f"{i+1}): {option_score[0]}: {option_score[1]}\n")
 
+    user_input = input("Type in your scoring option NUMBER(ex. 2, 3, 7): ")
+    if not user_input.isdigit():
+        print("Enter a valid scoring option.")
+        return choose(scores, used)
+    
+    if int(user_input) not in range(1, len(valid_options_indexed)+1):
+        print("Enter a valid scoring option.")
+        return choose(scores, used)
+
+    #MAL: NÃO SEI BEM O QUE DEVIA DEVOLVER
+    option, score = valid_options_indexed[int(user_input)-1]
+
+    used += option
+    return option, score
 
 if __name__ == "__main__":
     print(roll_dice.__doc__)
@@ -152,3 +173,11 @@ if __name__ == "__main__":
     x=[2, 2, 2, 2, 5]
     print(x)
     print(evaluate(x))
+    x=[2, 5, 5, 6, 6]
+    print(x)
+    print(evaluate(x))
+    x=[3, 3, 5, 5, 5]
+    print(x)
+    y = ["three_of_a_kind", "3", "chance"]
+    print(choose(evaluate(x), y))
+    print(y)
