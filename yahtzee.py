@@ -140,8 +140,12 @@ def choose(scores, used):
     #MAL: NÃO SEI BEM O QUE DEVIA DEVOLVER
     option, score = valid_options_indexed[int(user_input)-1]
 
-    used += option
-    return option, score
+    used.append(option)
+
+    scores[option] = score
+
+    #return option, score
+    return option, score 
 
 if __name__ == "__main__":
     print(roll_dice.__doc__)
